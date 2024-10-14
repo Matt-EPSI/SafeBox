@@ -1,0 +1,1 @@
+Provided as is, without any guarantee
