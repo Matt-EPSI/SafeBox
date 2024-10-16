@@ -70,7 +70,7 @@ if (Test-Path "$newFolderPath\Vagrantfile") {
     Write-Host "Échec de la création du fichier Vagrantfile."
 }
 
-
+$vagrantFilePath = Join-Path $newFolderPath "Vagrantfile"
 # Vérifier si le fichier Vagrantfile existe
 if (Test-Path $vagrantFilePath) {
     # Effacer le contenu du Vagrantfile
@@ -158,7 +158,51 @@ apt-get update -y
 apt-get upgrade -y
 
 #Mise à jour du nom de l'ordinateur
-echo "SafeBox"
+echo "SafeBox" > /etc/hostname
 
 #Installation libreoffice
 sudo apt-get install libreoffice
+
+#Changement du fond d'écran 
+apt-get install -y feh
+mkdir -p /home/pi/wallpapers
+wget -q "https://image.tmdb.org/t/p/original/gjHZbURgyqjBMHQICu3VZQf41gF.jpg" -O /home/pi/wallpapers/background.jpg
+DISPLAY=:0 feh --bg-scale "/home/pi/wallpapers/background.jpg"
+
+#Désactivation de Piwiz
+sudo apt purge piwiz
+
+#Ajout d'utilisateur enfant
+useradd enfant -p 
+
+#Modification des serveurs DNS
+apt-get install -y systemd-resolved
+# Ajout des serveurs DNS dans le fichier resolved.conf
+cat >> /etc/systemd/resolved.conf << EOL
+DNS=193.110.81.1#kids.dns0.eu
+DNS=2a0f:fc80::1#kids.dns0.eu
+DNS=185.253.5.1#kids.dns0.eu
+DNS=2a0f:fc81::1#kids.dns0.eu
+DNSOverTLS=yes
+EOL
+
+#Lancement automatique au démarrage
+systemctl enable systemd-resolved
+ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+
+#Sortie de chroot
+exit
+
+#Démontage des médias
+sudo umount -l rootfs/dev/
+sudo umount -l rootfs/sys/
+sudo umount -l rootfs/proc/
+sudo losetup-d $DEVICE
+
+#Compression de l'image et sortie de vagrant
+xz -v 2024-07-04-raspios-bookworm-arm64.img
+mv *.xz /vagrant/
+exit 
+logout
+vagrant destroy -y
+Exit-PSHostProcess
