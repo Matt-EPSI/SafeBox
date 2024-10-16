@@ -53,7 +53,7 @@ function Install-VirtualBox {
         Write-Host "VirtualBox est déjà installé."
     }
 }
-# Appel des fonctions pour installer Chocolatey puis Vagrant
+# Appel des fonctions pour installer Chocolatey puis Vagrant puis Virtualbox
 Install-Chocolatey
 Install-Vagrant
 Install-VirtualBox
@@ -1021,5 +1021,7 @@ xz -v 2024-07-04-raspios-bookworm-arm64.img
 mv *.xz /vagrant/
 exit 
 logout
-vagrant destroy -y
+vagrant halt -y
+
+Write-Host "Processus terminé."
 Exit-PSHostProcess

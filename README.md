@@ -8,11 +8,13 @@ Comprenez bien cependant que les limitations techniques que nous avons mis en pl
 SafeBox, pour qu'Internet reste une cour de récréation pour tous.
 
 ## Prérequis
+
 - Un PC Windows 11
 - Code d'adminitration de l'ordinateur
 - Une carte MicroSD d'au moins 32 Go
 - Un Raspberry Pi 4 au minimum. Nous conseillons le Pi400 pour une première utilisation, mais tous les modèles 64 bits conviennent. N'hésitez pas à le choisir et l'accessoiriser avec votre enfant !
 - Un peu de patience... N'hésitez pas à parcourir notre site pendant l'installation (45 minutes environ)
+
 ## Installation
 
 Téléchargez le fichier "custom_image.ps1", puis exécutez le en tant qu'administrateur. Il est recommandé d'effectuer ce travail sur un ordinateur disposant d'au moins 16 coeurs et 16 Go de mémoire vive (voir "Adaptation" plus bas dans le cas contraire). 
@@ -31,6 +33,9 @@ Et voilà !
 - DNS alternatifs configurés (https://dns0.eu/kids)
 - Blocage de Facebook, Instagram et Twitter (et services associés)
 
+## Adaptation
+
+Si votre ordinateur n'est pas assez puissant pour la configuration de base, modifiez les lignes 85 et 86 avec votre valeur de RAM (memory) et de CPU. Nous recommandons de vous limiter à 50% des valeurs de votre ordinateur (4096 si vous disposez de 8Go de RAM par exemple).
 
 ## Pour aller plus loin
 Nous conseillons l'utilisation de Firefox comme navigateur, pour éviter les errements de Google avec son Manifest v3.
