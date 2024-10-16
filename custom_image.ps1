@@ -115,14 +115,18 @@ if ($vagrantStatus) {
     Write-Host "Échec du démarrage de la machine Vagrant."
 }
 
+#Téléchargement de l'image cible sur le site de Raspberry, et décompression totale
 wget --progress=bar:noscroll https://downloads.raspberrypi.com/raspios_full_armhf/images/raspios_full_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-full.img.xz
 unxz -v 2024-07-04-raspios-bookworm-armhf-full.img.xz
-sudo apt-get install -y qemu-utils
 
+#Installation des paquets qemu
+sudo apt-get install -y qemu-utils
+sudo apt-get install -y qemu-user-static
+
+#Redimensionnement de l'image
 qemu-img info 2024-07-04-raspios-bookworm-armhf-full.img 
 qemu-img resize 2024-07-04-raspios-bookworm-armhf-full.img +6G
 fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img
-
 growpart 2024-07-04-raspios-bookworm-armhf-full.img 2
 fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img
 
@@ -131,7 +135,7 @@ echo $DEVICE
 lsblk -o name,label,size $DEVICE
 
 losetup -l
-
+#Montage des disques
 DEVICE=$DEVICE
 sudo e2fsck -f ${DEVICE}p2
 sudo resize2fs ${DEVICE}p2
@@ -143,3 +147,18 @@ cat rootfs/etc/fstab
 ls rootfs/boot/
 
 sudo mount ${DEVICE}p1 rootfs/boot/
+rm -rf /rootfs/dev/*
+sudo mount -t proc /proc rootfs/proc/
+sudo mount --bind /sys rootfs/sys/
+sudo mount --bind /dev rootfs/dev/
+
+#Connexion au Raspberry en émulation et mise à jour
+sudo chroot rootfs/
+apt-get update -y
+apt-get upgrade -y
+
+#Mise à jour du nom de l'ordinateur
+echo "SafeBox"
+
+#Installation libreoffice
+sudo apt-get install libreoffice
