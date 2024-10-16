@@ -7,36 +7,45 @@ Comprenez bien cependant que les limitations techniques que nous avons mis en pl
 
 SafeBox, pour qu'Internet reste une cour de récréation pour tous.
 
+## Prérequis
+- Un PC Windows 11
+- Code d'adminitration de l'ordinateur
+- Une carte MicroSD d'au moins 32 Go
+- Un Raspberry Pi 4 au minimum. Nous conseillons le Pi400 pour une première utilisation, mais tous les modèles 64 bits conviennent. N'hésitez pas à le choisir et l'accessoiriser avec votre enfant !
+- Un peu de patience... N'hésitez pas à parcourir notre site pendant l'installation (45 minutes environ)
 ## Installation
 
-Use the package manager [pip](https://pip.pypa.io/en/stable/) to install foobar.
+Téléchargez le fichier "custom_image.ps1", puis exécutez le en tant qu'administrateur. Il est recommandé d'effectuer ce travail sur un ordinateur disposant d'au moins 16 coeurs et 16 Go de mémoire vive (voir "Adaptation" plus bas dans le cas contraire). 
 
-```bash
-pip install foobar
-```
+Dans votre dossier "Téléchargements", vous trouverez un fichier "2024-07-04-raspios-bookworm-arm64.img"
 
-## Usage
+Utilisez "Rasbperry Pi Imager (https://downloads.raspberrypi.org/imager/imager_latest.exe) pour envoyer ce fichier sur une carte MicroSD.
 
-```python
-import foobar
+Et voilà !
 
-# returns 'words'
-foobar.pluralize('word')
+## Fonctions
 
-# returns 'geese'
-foobar.pluralize('goose')
+- Raspberry PiOS Bookworm (sortie du 04 juillet 2024)
+- Libre office installé
+- Compte enfant sans privilèges configuré
+- DNS alternatifs configurés (https://dns0.eu/kids)
+- Blocage de Facebook, Instagram et Twitter (et services associés)
 
-# returns 'phenomenon'
-foobar.singularize('phenomena')
-```
 
-## Contributing
+## Pour aller plus loin
+Nous conseillons l'utilisation de Firefox comme navigateur, pour éviter les errements de Google avec son Manifest v3.
+Pour sécuriser Youtube et Google, nous vous conseillons de mettre en place le contrôle parental Google (plus d'informations ici : https://families.google/intl/fr/familylink/).
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
 
-Please make sure to update tests as appropriate.
+## Contribution
+Ce projet est issu d'un travail d'école. La maintenance en sera limitée. N'hésitez pas à forker le projet ou à proposer de nouvelles features à implémenter ! 
+
+## Sources
+Ce travail a en grande partie été inspiré de l'excellent article de Brett Weir : https://brettweir.com/blog/custom-raspberry-pi-image-no-hardware/
+
 
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
+[PiOS](https://www.raspberrypi.com/licensing/)
+Fond d'écran : Copyright SPIN MASTERS LTD et Nickolodeon
