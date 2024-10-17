@@ -122,8 +122,12 @@ vagrant ssh -c "wget --progress=bar:noscroll https://downloads.raspberrypi.com/r
 vagrant ssh -c "unxz -v 2024-07-04-raspios-bookworm-armhf-full.img.xz"
 
 #Installation des paquets qemu
+vagrant ssh -c "sudo apt-get update && sudo apt-get install -y util-linux"
 vagrant ssh -c "sudo apt-get install -y qemu-utils"
+vagrant ssh -c "sudo apt-get install -y qemu-system"
+vagrant ssh -c "sudo apt-get update"
 vagrant ssh -c "sudo apt-get install -y qemu-user-static"
+
 
 #Redimensionnement de l'image
 vagrant ssh -c "qemu-img info 2024-07-04-raspios-bookworm-armhf-full.img" 
@@ -132,7 +136,7 @@ vagrant ssh -c "fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img"
 vagrant ssh -c "growpart 2024-07-04-raspios-bookworm-armhf-full.img 2"
 vagrant ssh -c "fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img"
 
-vagrant ssh -c "DEVICE=$(sudo losetup -f --show -P 2024-07-04-raspios-bookworm-armhf-full.img)"
+vagrant ssh -c "DEVICE=$(losetup -f --show -P 2024-07-04-raspios-bookworm-armhf-full.img)"
 vagrant ssh -c "echo $DEVICE"
 vagrant ssh -c "lsblk -o name,label,size $DEVICE"
 
@@ -163,7 +167,7 @@ vagrant ssh -c "apt-get upgrade -y"
 vagrant ssh -c "echo "SafeBox" > /etc/hostname"
 
 #Installation libreoffice
-vagrant ssh -c "sudo apt-get install libreoffice"
+vagrant ssh -c "sudo apt-get install -y libreoffice"
 
 #Changement du fond d'écran 
 vagrant ssh -c "apt-get install -y feh"
