@@ -115,6 +115,9 @@ if ($vagrantStatus) {
     Write-Host "Échec du démarrage de la machine Vagrant."
 }
 
+
+#Pour le moment, le script s'arrête là. TODO : trouver un moyen d'exécuter les commandes Bash via PS
+
 #Téléchargement de l'image cible sur le site de Raspberry, et décompression totale
 wget --progress=bar:noscroll https://downloads.raspberrypi.com/raspios_full_armhf/images/raspios_full_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-full.img.xz
 unxz -v 2024-07-04-raspios-bookworm-armhf-full.img.xz
@@ -178,16 +181,22 @@ useradd enfant -p
 #Modification des serveurs DNS
 apt-get install -y systemd-resolved
 # Ajout des serveurs DNS dans le fichier resolved.conf
-cat >> /etc/systemd/resolved.conf << EOL
+#cat >> /etc/systemd/resolved.conf << EOL
+
+#EOL
+$resolvedConfig = @"
 DNS=193.110.81.1#kids.dns0.eu
 DNS=2a0f:fc80::1#kids.dns0.eu
 DNS=185.253.5.1#kids.dns0.eu
 DNS=2a0f:fc81::1#kids.dns0.eu
 DNSOverTLS=yes
-EOL
+"@
+$resolvedConfig | Out-File -Append /etc/systemd/resolved.conf
 
 # Blocage des services Meta
-cat >> /etc/hosts << EOL
+#cat >> /etc/hosts << EOL
+
+$hostsEntries = @"
 #Blocking Facebook Domains
 0.0.0.0 apps.facebook.com
 0.0.0.0 connect.facebook.net
@@ -1000,7 +1009,10 @@ cat >> /etc/hosts << EOL
 0.0.0.0 fb.com
 0.0.0.0 newsroom.fb.com
 0.0.0.0 investor.fb.com
-EOL
+"@
+$hostsEntries | Out-File -Append /etc/hosts
+
+#EOL
 
 
 #Lancement automatique au démarrage
