@@ -110,93 +110,87 @@ if ($vagrantStatus) {
 
     # Connexion à la machine via SSH
     Write-Host "Connexion à la machine Vagrant via SSH..."
-    vagrant ssh
+    
 } else {
     Write-Host "Échec du démarrage de la machine Vagrant."
 }
 
 
-#Pour le moment, le script s'arrête là. TODO : trouver un moyen d'exécuter les commandes Bash via PS
 
 #Téléchargement de l'image cible sur le site de Raspberry, et décompression totale
-vagrant ssh -c "wget --progress=bar:noscroll https://downloads.raspberrypi.com/raspios_full_armhf/images/raspios_full_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-full.img.xz
-unxz -v 2024-07-04-raspios-bookworm-armhf-full.img.xz
-"
+vagrant ssh -c "wget --progress=bar:noscroll https://downloads.raspberrypi.com/raspios_full_armhf/images/raspios_full_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-full.img.xz"
+vagrant ssh -c "unxz -v 2024-07-04-raspios-bookworm-armhf-full.img.xz"
+
 #Installation des paquets qemu
-sudo apt-get install -y qemu-utils
-sudo apt-get install -y qemu-user-static
+vagrant ssh -c "sudo apt-get install -y qemu-utils"
+vagrant ssh -c "sudo apt-get install -y qemu-user-static"
 
 #Redimensionnement de l'image
-qemu-img info 2024-07-04-raspios-bookworm-armhf-full.img 
-qemu-img resize 2024-07-04-raspios-bookworm-armhf-full.img +6G
-fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img
-growpart 2024-07-04-raspios-bookworm-armhf-full.img 2
-fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img
+vagrant ssh -c "qemu-img info 2024-07-04-raspios-bookworm-armhf-full.img" 
+vagrant ssh -c "qemu-img resize 2024-07-04-raspios-bookworm-armhf-full.img +6G"
+vagrant ssh -c "fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img"
+vagrant ssh -c "growpart 2024-07-04-raspios-bookworm-armhf-full.img 2"
+vagrant ssh -c "fdisk -l 2024-07-04-raspios-bookworm-armhf-full.img"
 
-DEVICE=$(sudo losetup -f --show -P 2024-07-04-raspios-bookworm-armhf-full.img)
-echo $DEVICE
-lsblk -o name,label,size $DEVICE
+vagrant ssh -c "DEVICE=$(sudo losetup -f --show -P 2024-07-04-raspios-bookworm-armhf-full.img)"
+vagrant ssh -c "echo $DEVICE"
+vagrant ssh -c "lsblk -o name,label,size $DEVICE"
 
-losetup -l
+vagrant ssh -c "losetup -l"
 #Montage des disques
-DEVICE=$DEVICE
-sudo e2fsck -f ${DEVICE}p2
-sudo resize2fs ${DEVICE}p2
-mkdir -p rootfs
-sudo mount ${DEVICE}p2 rootfs/
-ls rootfs/
+vagrant ssh -c "DEVICE=$DEVICE"
+vagrant ssh -c "sudo e2fsck -f ${DEVICE}p2"
+vagrant ssh -c "sudo resize2fs ${DEVICE}p2"
+vagrant ssh -c "mkdir -p rootfs"
+vagrant ssh -c "sudo mount ${DEVICE}p2 rootfs/"
+vagrant ssh -c "ls rootfs/"
 
-cat rootfs/etc/fstab
-ls rootfs/boot/
+vagrant ssh -c "cat rootfs/etc/fstab"
+vagrant ssh -c "ls rootfs/boot/"
 
-sudo mount ${DEVICE}p1 rootfs/boot/
-rm -rf /rootfs/dev/*
-sudo mount -t proc /proc rootfs/proc/
-sudo mount --bind /sys rootfs/sys/
-sudo mount --bind /dev rootfs/dev/
+vagrant ssh -c "sudo mount ${DEVICE}p1 rootfs/boot/"
+vagrant ssh -c "rm -rf /rootfs/dev/*"
+vagrant ssh -c "sudo mount -t proc /proc rootfs/proc/"
+vagrant ssh -c "sudo mount --bind /sys rootfs/sys/"
+vagrant ssh -c "sudo mount --bind /dev rootfs/dev/"
 
 #Connexion au Raspberry en émulation et mise à jour
-sudo chroot rootfs/
-apt-get update -y
-apt-get upgrade -y
+vagrant ssh -c "sudo chroot rootfs/"
+vagrant ssh -c "apt-get update -y"
+vagrant ssh -c "apt-get upgrade -y"
 
 #Mise à jour du nom de l'ordinateur
-echo "SafeBox" > /etc/hostname
+vagrant ssh -c "echo "SafeBox" > /etc/hostname"
 
 #Installation libreoffice
-sudo apt-get install libreoffice
+vagrant ssh -c "sudo apt-get install libreoffice"
 
 #Changement du fond d'écran 
-apt-get install -y feh
-mkdir -p /home/pi/wallpapers
-wget -q "https://image.tmdb.org/t/p/original/gjHZbURgyqjBMHQICu3VZQf41gF.jpg" -O /home/pi/wallpapers/background.jpg
-DISPLAY=:0 feh --bg-scale "/home/pi/wallpapers/background.jpg"
+vagrant ssh -c "apt-get install -y feh"
+vagrant ssh -c "mkdir -p /home/pi/wallpapers"
+vagrant ssh -c "wget -q "https://image.tmdb.org/t/p/original/gjHZbURgyqjBMHQICu3VZQf41gF.jpg" -O /home/pi/wallpapers/background.jpg"
+vagrant ssh -c "DISPLAY=:0 feh --bg-scale "/home/pi/wallpapers/background.jpg""
 
 #Désactivation de Piwiz
-sudo apt purge piwiz
+vagrant ssh -c "sudo apt purge piwiz"
 
 #Ajout d'utilisateur enfant
-useradd enfant -p 
+vagrant ssh -c "useradd enfant -p "
 
 #Modification des serveurs DNS
-apt-get install -y systemd-resolved
+vagrant ssh -c "apt-get install -y systemd-resolved"
 # Ajout des serveurs DNS dans le fichier resolved.conf
-#cat >> /etc/systemd/resolved.conf << EOL
-
-#EOL
-$resolvedConfig = @"
+vagrant ssh -c "cat >> /etc/systemd/resolved.conf << EOL
 DNS=193.110.81.1#kids.dns0.eu
 DNS=2a0f:fc80::1#kids.dns0.eu
 DNS=185.253.5.1#kids.dns0.eu
 DNS=2a0f:fc81::1#kids.dns0.eu
 DNSOverTLS=yes
-"@
-$resolvedConfig | Out-File -Append /etc/systemd/resolved.conf
+EOL"
+
 
 # Blocage des services Meta
-#cat >> /etc/hosts << EOL
-
-$hostsEntries = @"
+vagrant ssh -c "cat >> /etc/hosts << EOL
 #Blocking Facebook Domains
 0.0.0.0 apps.facebook.com
 0.0.0.0 connect.facebook.net
@@ -1009,31 +1003,28 @@ $hostsEntries = @"
 0.0.0.0 fb.com
 0.0.0.0 newsroom.fb.com
 0.0.0.0 investor.fb.com
-"@
-$hostsEntries | Out-File -Append /etc/hosts
-
-#EOL
+EOL"
 
 
 #Lancement automatique au démarrage
-systemctl enable systemd-resolved
-ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf
+vagrant ssh -c "systemctl enable systemd-resolved"
+vagrant ssh -c "ln -sf /run/systemd/resolve/stub-resolv.conf /etc/resolv.conf"
 
 #Sortie de chroot
-exit
+vagrant ssh -c "exit"
 
 #Démontage des médias
-sudo umount -l rootfs/dev/
-sudo umount -l rootfs/sys/
-sudo umount -l rootfs/proc/
-sudo losetup-d $DEVICE
+vagrant ssh -c "sudo umount -l rootfs/dev/"
+vagrant ssh -c "sudo umount -l rootfs/sys/"
+vagrant ssh -c "sudo umount -l rootfs/proc/"
+vagrant ssh -c "sudo losetup-d $DEVICE"
 
 #Compression de l'image et sortie de vagrant
-xz -v 2024-07-04-raspios-bookworm-arm64.img
-mv *.xz /vagrant/
-exit 
-logout
-vagrant halt -y
+vagrant ssh -c "xz -v 2024-07-04-raspios-bookworm-arm64.img"
+vagrant ssh -c "mv *.xz /vagrant/"
+vagrant ssh -c "exit "
+vagrant ssh -c "logout"
+vagrant ssh -c "vagrant halt -y"
 
 Write-Host "Processus terminé."
 Exit-PSHostProcess
