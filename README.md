@@ -46,6 +46,9 @@ Pour sécuriser Youtube et Google, nous vous conseillons de mettre en place le c
 ## Contribution
 Ce projet est issu d'un travail d'école. La maintenance en sera limitée. N'hésitez pas à forker le projet ou à proposer de nouvelles features à implémenter ! 
 
+
+## Vidéo de présentation du projet
+https://youtu.be/bTE3JmYJpiw
 ## Sources
 Ce travail a en grande partie été inspiré de l'excellent article de Brett Weir : https://brettweir.com/blog/custom-raspberry-pi-image-no-hardware/
 
