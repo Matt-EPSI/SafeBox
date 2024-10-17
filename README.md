@@ -17,13 +17,14 @@ SafeBox, pour qu'Internet reste une cour de récréation pour tous.
 
 ## Installation
 
+Activez les scripts via PowerShell administrateur : Set-ExecutionPolicy Unrestricted
 Téléchargez le fichier "custom_image.ps1", puis exécutez le en tant qu'administrateur. Il est recommandé d'effectuer ce travail sur un ordinateur disposant d'au moins 16 coeurs et 16 Go de mémoire vive (voir "Adaptation" plus bas dans le cas contraire). 
 
 Dans votre dossier "Téléchargements", vous trouverez un fichier "2024-07-04-raspios-bookworm-arm64.img"
 
 Utilisez "Rasbperry Pi Imager (https://downloads.raspberrypi.org/imager/imager_latest.exe) pour envoyer ce fichier sur une carte MicroSD.
 
-Et voilà !
+Et voilà ! N'oubliez pas de désactiver les scripts à nouveau en lancant la commande Set-ExecutionPolicy Default
 
 ## Fonctions
 
