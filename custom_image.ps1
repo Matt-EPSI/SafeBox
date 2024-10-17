@@ -119,9 +119,9 @@ if ($vagrantStatus) {
 #Pour le moment, le script s'arrête là. TODO : trouver un moyen d'exécuter les commandes Bash via PS
 
 #Téléchargement de l'image cible sur le site de Raspberry, et décompression totale
-wget --progress=bar:noscroll https://downloads.raspberrypi.com/raspios_full_armhf/images/raspios_full_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-full.img.xz
+vagrant ssh -c "wget --progress=bar:noscroll https://downloads.raspberrypi.com/raspios_full_armhf/images/raspios_full_armhf-2024-07-04/2024-07-04-raspios-bookworm-armhf-full.img.xz
 unxz -v 2024-07-04-raspios-bookworm-armhf-full.img.xz
-
+"
 #Installation des paquets qemu
 sudo apt-get install -y qemu-utils
 sudo apt-get install -y qemu-user-static
